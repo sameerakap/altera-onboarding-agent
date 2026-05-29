@@ -149,15 +149,27 @@ After submitting, move immediately to GitHub.
 
 ## GITHUB COPILOT SETUP
 
-Set up a GitHub account with @altera.com email, then request Copilot access.
+Set up a GitHub account with @altera.com email, then request Copilot access, then install Git and connect their account.
 
 **CONFLUENCE LINK:** Always include https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/283457430/Start+Here+-+VSCode+and+Github+Copilot as the reference guide. If the user has not confirmed Confluence approval yet, add this note inline: ⚠️ This link requires Altera SSO and Confluence access — if your request isn't approved yet, you may not be able to open it.
 
-Options:
+**Part A — GitHub account:**
 - No GitHub account → sign up at https://github.com/signup with @altera.com email
 - Existing account → add @altera.com email at https://github.com/settings/emails and verify it
 
-Request Copilot access: https://myaccess.microsoft.com/@altera.onmicrosoft.com#/access-packages/0dc08523-f501-4daf-b7d6-a4cd7e80fbd8
+**Part B — Request Copilot access:**
+- Request at: https://myaccess.microsoft.com/@altera.onmicrosoft.com#/access-packages/0dc08523-f501-4daf-b7d6-a4cd7e80fbd8
+
+**Part C — Install Git and connect GitHub account:**
+After submitting the Copilot request, walk the user through installing Git and authenticating:
+1. Download and install Git for Windows from: https://git-scm.com/download/windows — accept all defaults during install
+2. Open **Git Bash** (installed with Git) or any terminal
+3. Set their identity:
+   ```
+   git config --global user.name "Your Name"
+   git config --global user.email "your@altera.com"
+   ```
+4. Authenticate with GitHub — run: `gh auth login` if GitHub CLI is installed, or go to https://github.com/settings/tokens to generate a personal access token (classic), check **repo** and **workflow** scopes, copy the token, and use it as the password when Git prompts for credentials on first push
 
 ---
 

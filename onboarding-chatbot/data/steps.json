@@ -351,6 +351,23 @@
           }
         ],
         "completionConfirmation": "Have you received the second confirmation email confirming you joined the Altera Copilot GitHub organization?"
+      },
+      {
+        "phase_id": "git_install_and_connect",
+        "phase_number": 4,
+        "title": "Install Git and Connect Your GitHub Account",
+        "instructions": "Now let's get Git installed on your machine and connected to your GitHub account so you can work with repositories right away.",
+        "substeps": [
+          "Download and install Git for Windows from https://git-scm.com/download/windows — accept all defaults during install",
+          "Open Git Bash (installed with Git) or any terminal",
+          "Set your identity: git config --global user.name \"Your Name\" and git config --global user.email \"your@altera.com\"",
+          "Authenticate with GitHub: go to https://github.com/settings/tokens, click Generate new token (classic), check the repo and workflow scopes, copy the token, and use it as your password when Git prompts for credentials on first push"
+        ],
+        "links": [
+          { "label": "Download Git for Windows", "url": "https://git-scm.com/download/windows" },
+          { "label": "GitHub Personal Access Tokens", "url": "https://github.com/settings/tokens" }
+        ],
+        "completionConfirmation": "Have you installed Git and configured your GitHub credentials?"
       }
     ],
     "agent_behavior": {
