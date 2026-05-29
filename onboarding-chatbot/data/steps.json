@@ -1,0 +1,731 @@
+[
+  {
+    "id": "workday_onboarding",
+    "title": "Workday Onboarding Tasks",
+    "order": 0,
+    "category": "no_ticket",
+    "dependsOn": [],
+    "requiresApproval": false,
+    "priority": "first_task",
+    "global_note": {
+      "vpn_wifi_warning": "Some tasks in your onboarding — such as creating your UNIX account — must be done while connected to the office Intel WiFi network or through the Intel VPN. If you are working remotely for any part of your onboarding, make sure your VPN is active before attempting those steps."
+    },
+    "phases": [
+      {
+        "phase_id": "equipment_check",
+        "phase_number": 0,
+        "title": "Equipment Check",
+        "agent_instruction": "This is the very first thing to do after greeting the user. Ask both questions and record their answers — the responses gate what tasks are available later.",
+        "instructions": "Before we dive in, let's make sure you have what you need.",
+        "checks": [
+          {
+            "id": "intel_badge",
+            "question": "Have you been to the Intel building at 2200 Mission College Blvd, Santa Clara, CA 95054 to pick up your Intel badge and Intel laptop?",
+            "follow_up": "If not, you will need to do that as soon as possible. Some tasks — like setting up your Enclave account — require your Intel computer and Intel Microsoft account and cannot be done without it."
+          },
+          {
+            "id": "altera_laptop",
+            "question": "Have you picked up your Altera laptop from IT in building 3?",
+            "follow_up": "If not, connect with your manager or IT to arrange pickup."
+          }
+        ],
+        "gate_logic": {
+          "has_intel_laptop": {
+            "unlocks": ["workday_onboarding", "teams_outlook", "confluence_access", "jira_access", "github_copilot", "altera_enclave_unix", "ion_vnc_vscode_cursor_setup"]
+          },
+          "no_intel_laptop_only_altera": {
+            "unlocks": ["workday_onboarding", "teams_outlook", "confluence_access", "jira_access", "github_copilot"],
+            "blocks": ["altera_enclave_unix", "ion_vnc_vscode_cursor_setup"],
+            "block_reason": "The Enclave request and everything that follows requires your Intel computer and Intel Microsoft account. We will come back to those once you have your Intel laptop."
+          }
+        },
+        "completionConfirmation": "Got it — let me know what you have and we will tailor the plan from there."
+      },
+      {
+        "phase_id": "access_workday",
+        "phase_number": 1,
+        "title": "Access Your Workday Portal",
+        "instructions": "You already have a Workday account from your application process. On your first day your portal will have been updated with onboarding tasks. Let's get those done first.",
+        "substeps": [
+          "Log into your Workday account",
+          "On the left side, hover over 'Personal' and click 'Onboarding'",
+          "Your tasks will be listed under 'Tasks'"
+        ]
+      },
+      {
+        "phase_id": "complete_workday_tasks",
+        "phase_number": 2,
+        "title": "Complete Your Workday Tasks",
+        "instructions": "Work through each of your Workday tasks. These should include the following:",
+        "tasks": [
+          {
+            "task_id": "direct_deposit",
+            "title": "Set Up Direct Deposit",
+            "description": "Enter your bank account information to set up your direct deposit for payroll.",
+            "urgency": "normal"
+          },
+          {
+            "task_id": "profile_photo",
+            "title": "Upload a Profile Photo",
+            "description": "Upload a photo of yourself to your Workday profile.",
+            "urgency": "normal"
+          },
+          {
+            "task_id": "upload_documents",
+            "title": "Upload Required Documents",
+            "description": "Upload any documents requested in your Workday task list.",
+            "urgency": "normal"
+          },
+          {
+            "task_id": "i9_verification",
+            "title": "I-9 Identity Verification",
+            "description": "This must be completed within your first three business days. It involves uploading identity documents and a brief verification call with an agent.",
+            "urgency": "high",
+            "deadline": "Within 3 business days of your start date",
+            "time_restriction": {
+              "hours": "7:00 AM - 7:00 PM CST",
+              "days": "Business days only",
+              "warning": "The I-9 verification call can only be scheduled during these hours. Do not leave this until the end of your third day."
+            }
+          }
+        ],
+        "completionConfirmation": "Have you worked through all of your Workday onboarding tasks including your I-9? Confirm to continue."
+      },
+      {
+        "phase_id": "explore_workday",
+        "phase_number": 3,
+        "title": "Explore the Workday Portal",
+        "instructions": "Take a few minutes to get familiar with Workday. Here are some things you can do from the portal:",
+        "highlights": [
+          "View and edit your employee profile",
+          "See the org chart and explore the company leadership structure",
+          "Request time off",
+          "View your expenses and reimbursements"
+        ],
+        "completionConfirmation": "Whenever you are ready, let me know and we will move on."
+      },
+      {
+        "phase_id": "teams_outlook_setup",
+        "phase_number": 4,
+        "title": "Set Up Microsoft Teams and Outlook",
+        "instructions": "These should already be set up for you, but let's make sure you can access them. Open each link below and confirm you can sign in with your Altera account:",
+        "substeps": [
+          "Open Microsoft Teams: https://teams.cloud.microsoft/ — sign in with your Altera account",
+          "Open Outlook: https://outlook.cloud.microsoft/mail/ — sign in with your Altera account",
+          "If either one asks you to set up a profile or preferences, go ahead and do that now"
+        ],
+        "links": [
+          { "label": "Microsoft Teams", "url": "https://teams.cloud.microsoft/" },
+          { "label": "Outlook Web", "url": "https://outlook.cloud.microsoft/mail/" }
+        ],
+        "completionConfirmation": "Can you access both Teams and Outlook? Let me know and we will move on to your access requests."
+      }
+    ],
+    "agent_behavior": {
+      "on_session_start": "Begin here. Greet the user, give a brief overview of onboarding, deliver the VPN/WiFi warning, then immediately run the equipment check (phase 0) before anything else.",
+      "on_i9_mention": "Proactively flag the 3 business day deadline and the 7 AM to 7 PM CST time window.",
+      "on_completion": "Mark workday_onboarding as complete and proceed to the ticket tasks queue starting with confluence_access."
+    }
+  },
+  {
+    "id": "confluence_access",
+    "title": "Confluence Cloud Wiki Access",
+    "order": 1,
+    "category": "requires_ticket",
+    "dependsOn": [],
+    "requiresApproval": true,
+    "sso_note": "Confluence pages can only be accessed when signed in with your Altera SSO. If you are on your Intel laptop, make sure you are signed into your Altera account in your browser before trying to open any Confluence links — otherwise they will not load even after your access is approved.",
+    "phases": [
+      {
+        "phase_id": "submit_confluence_request",
+        "phase_number": 1,
+        "title": "Submit Confluence Access Request",
+        "instructions": "To access Altera's Confluence Cloud wiki you need to submit a ServiceNow access request. Here is how:",
+        "substeps": [
+          "Click the ServiceNow request link below",
+          "Sign in with your Altera credentials if prompted",
+          "Request access to these spaces: 'PSG Onboarding' and 'AI Assisted Development'",
+          "Ask your manager if there are any additional wiki spaces you should request and include those in the same request",
+          "Submit the request"
+        ],
+        "sso_reminder": "Once approved, you will only be able to access Confluence pages when signed in with your Altera SSO. If you are on your Intel laptop, sign into your Altera account in the browser before opening any Confluence links.",
+        "links": [
+          {
+            "label": "Submit Confluence Access Request (ServiceNow)",
+            "url": "https://alteraprod1.service-now.com/esc?id=sc_cat_item&sys_id=58c343c3eb0eda100fa2f4bbcad0cd87"
+          },
+          {
+            "label": "View Your Active Requests",
+            "url": "https://alteraprod1.service-now.com/esc?id=ec_home"
+          }
+        ],
+        "requires_approval_wait": true,
+        "approval_wait_message": "Your Confluence access request has been submitted. Moving on to Jira now. Let me know when you receive the Confluence approval email.",
+        "completionConfirmation": "Have you received an email confirming your Confluence access has been approved?"
+      },
+      {
+        "phase_id": "verify_confluence_access",
+        "phase_number": 2,
+        "title": "Verify Your Confluence Access",
+        "instructions": "Now that you have been approved, confirm you can access the wiki pages by opening each link below. Remember to be signed into your Altera SSO first.",
+        "links": [
+          {
+            "label": "Cursor IDE — AI Assisted Development Space",
+            "url": "https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/880771080/Cursor+IDE"
+          },
+          {
+            "label": "Start Here — VSCode and GitHub Copilot",
+            "url": "https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/283457430/Start+Here+-+VSCode+and+Github+Copilot"
+          },
+          {
+            "label": "PSG Onboarding Space Overview",
+            "url": "https://altera-corp.atlassian.net/wiki/spaces/psgonboarding/overview"
+          }
+        ],
+        "troubleshooting": {
+          "condition": "User says they still cannot access pages despite receiving approval email",
+          "response": "Make sure you are signed into your Altera SSO in the browser — Confluence will not load without it. If you are signed in and still blocked, resubmit the access request using the same ServiceNow link.",
+          "resubmit_link": {
+            "label": "Resubmit Confluence Access Request",
+            "url": "https://alteraprod1.service-now.com/esc?id=sc_cat_item&sys_id=58c343c3eb0eda100fa2f4bbcad0cd87"
+          }
+        },
+        "completionConfirmation": "Can you successfully open all three Confluence pages? Confirm to mark this task complete."
+      }
+    ],
+    "agent_behavior": {
+      "on_reach": "Tell the user this requires a ticket and will need approval. Begin phase 1 immediately with full instructions. Include the SSO note.",
+      "on_approval_wait": "After request is submitted, immediately move to jira_access.",
+      "on_completion": "Mark confluence_access as complete and continue."
+    }
+  },
+  {
+    "id": "jira_access",
+    "title": "Jira Access",
+    "order": 2,
+    "category": "requires_ticket",
+    "dependsOn": [],
+    "requiresApproval": true,
+    "sso_note": "Just like Confluence, Jira can only be accessed when signed in with your Altera SSO. Make sure you are signed in before trying to open any Jira links.",
+    "phases": [
+      {
+        "phase_id": "submit_jira_request",
+        "phase_number": 1,
+        "title": "Submit Jira Access Request",
+        "instructions": "To get access to Altera's Jira, submit an access request through the Microsoft MyAccess portal. Here is how:",
+        "substeps": [
+          "Click the MyAccess request link below",
+          "Sign in with your Altera Microsoft account if prompted",
+          "In the business reason field, enter something like: 'New intern/employee requesting Jira access for project tracking and issue management.'",
+          "Submit the request",
+          "You can track the status of your request using the request history link below"
+        ],
+        "sso_reminder": "Once approved, Jira will only be accessible when signed into your Altera SSO. If you are on your Intel laptop, sign into your Altera account in the browser before opening any Jira links.",
+        "links": [
+          {
+            "label": "Request Jira Access (MyAccess)",
+            "url": "https://myaccess.microsoft.com/@altera.onmicrosoft.com#/access-packages/298ba549-c4a7-4834-a5f0-f30a423ff583"
+          },
+          {
+            "label": "View Your Request History",
+            "url": "https://myaccess.microsoft.com/@altera.onmicrosoft.com#/request-history"
+          }
+        ],
+        "requires_approval_wait": true,
+        "approval_wait_message": "Your Jira access request has been submitted. Moving on to GitHub Copilot setup now. Let me know when you receive the Jira approval.",
+        "completionConfirmation": "Have you received confirmation that your Jira access has been approved?"
+      }
+    ],
+    "agent_behavior": {
+      "on_reach": "Tell the user this requires a ticket and will need approval. Begin phase 1 immediately with full instructions. Include the SSO note.",
+      "on_approval_wait": "After request is submitted, immediately move to github_copilot.",
+      "on_completion": "Mark jira_access as complete and continue."
+    }
+  },
+  {
+    "id": "github_copilot",
+    "title": "GitHub Copilot Setup",
+    "order": 3,
+    "category": "requires_ticket",
+    "dependsOn": [],
+    "requiresApproval": true,
+    "approvalStages": [
+      {
+        "stage": 1,
+        "id": "copilot_access_request",
+        "description": "Waiting for GitHub Copilot access approval email from Microsoft MyAccess"
+      },
+      {
+        "stage": 2,
+        "id": "copilot_org_join",
+        "description": "Waiting for second confirmation email to join altera-copilot org"
+      }
+    ],
+    "phases": [
+      {
+        "phase_id": "github_account_setup",
+        "phase_number": 1,
+        "title": "Set Up Your GitHub Account",
+        "instructions": "You need a GitHub account linked to your Altera email before requesting Copilot access. Choose one of the following options:",
+        "confluence_reference": {
+          "note": "There is a helpful Confluence article that walks through this setup with screenshots. If your Confluence access has been approved, open it here: https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/283457430/Start+Here+-+VSCode+and+Github+Copilot",
+          "warning_if_not_approved": "If your Confluence access has not been approved yet, you may not be able to open that link — you can still follow the steps below without it."
+        },
+        "options": [
+          {
+            "option": "A",
+            "label": "I don't have a GitHub account",
+            "substeps": [
+              "Go to https://github.com/signup",
+              "Sign up using your Altera email address (@altera.com)"
+            ]
+          },
+          {
+            "option": "B",
+            "label": "I already have a GitHub account (Intel or personal)",
+            "substeps": [
+              "Sign in to your existing GitHub account",
+              "Go to Settings > Emails: https://github.com/settings/emails",
+              "Click 'Add email address' and enter your Altera email (@altera.com)",
+              "Verify the email via the confirmation link GitHub sends you"
+            ]
+          }
+        ],
+        "links": [
+          { "label": "Create a GitHub Account", "url": "https://github.com/signup" },
+          { "label": "GitHub Email Settings", "url": "https://github.com/settings/emails" },
+          { "label": "VSCode and GitHub Copilot Setup Guide (Confluence — requires Altera SSO)", "url": "https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/283457430/Start+Here+-+VSCode+and+Github+Copilot" }
+        ],
+        "completionConfirmation": "Does your GitHub account have your Altera email added and verified? Confirm to continue."
+      },
+      {
+        "phase_id": "request_copilot_access",
+        "phase_number": 2,
+        "title": "Request GitHub Copilot Access",
+        "agent_instruction": "Do NOT provide this link or move to this phase until the user has explicitly confirmed their Altera email is added and verified on GitHub.",
+        "instructions": "Now that your Altera email is verified on GitHub, submit your Copilot access request.",
+        "substeps": [
+          "Click the link below to open the Copilot access request page",
+          "Sign in with your Altera Microsoft account if prompted",
+          "Click 'Request access' and submit the form",
+          "You will receive an approval email at your Altera address when the request is processed"
+        ],
+        "links": [
+          {
+            "label": "Request GitHub Copilot Access",
+            "url": "https://myaccess.microsoft.com/@altera.onmicrosoft.com#/access-packages/0dc08523-f501-4daf-b7d6-a4cd7e80fbd8"
+          }
+        ],
+        "requires_approval_wait": true,
+        "approval_wait_message": "Your Copilot access request has been submitted. Moving on to other tasks while you wait. Come back and let me know when you receive the approval email.",
+        "completionConfirmation": "Have you received the approval email from Microsoft MyAccess confirming your Copilot access?"
+      },
+      {
+        "phase_id": "join_altera_copilot_org",
+        "phase_number": 3,
+        "title": "Join the Altera Copilot GitHub Organization",
+        "instructions": "Now that you have been approved, click the link in your approval email to join the Altera Copilot GitHub organization.",
+        "substeps": [
+          "Open your approval email",
+          "Check that the email address in the body of the email is your Altera email. If it shows a different email, add your Altera email to GitHub under Settings > Emails: https://github.com/settings/emails",
+          "Click the link inside the approval email to join the Altera Copilot organization"
+        ],
+        "conditional_path": {
+          "condition": "IP not in approved database error appears after clicking the link",
+          "instructions": "If you see a message saying your IP address is not in the approved database:",
+          "substeps": [
+            "Go to your GitHub profile",
+            "Click on 'Organizations' in the left sidebar",
+            "Find 'altera-copilot' — it should show a 'Request' button next to it",
+            "Click 'Request' to submit your organization join request",
+            "Wait for a second confirmation email"
+          ],
+          "requires_approval_wait": true,
+          "approval_wait_message": "Your organization join request has been submitted. Come back and confirm once you receive the second confirmation email."
+        },
+        "links": [
+          { "label": "GitHub Email Settings (if needed)", "url": "https://github.com/settings/emails" },
+          {
+            "label": "GitHub Copilot Training Document (screenshots start on page 11)",
+            "url": "https://altera.sharepoint.com/:w:/r/sites/Engineering/_layouts/15/Doc.aspx?sourcedoc=%7B771C9515-D1F3-48D2-98CF-288D4BA421F4%7D&file=Curriculum%20%E2%80%93%20GitHub%20Copilot%20Training%20%E2%80%93%20February%209-11.docx&action=default&mobileredirect=true"
+          }
+        ],
+        "completionConfirmation": "Have you received the second confirmation email confirming you joined the Altera Copilot GitHub organization?"
+      }
+    ],
+    "agent_behavior": {
+      "on_reach": "Begin with phase 1. Include the Confluence article link with a note that it requires Altera SSO and may not be accessible if Confluence approval has not come through yet. Do NOT provide the MyAccess Copilot request link until the user explicitly confirms their Altera email is added and verified on GitHub.",
+      "on_approval_wait": "After phase 2 is submitted, immediately move to the next ticket task.",
+      "on_completion": "Mark github_copilot as complete and continue."
+    }
+  },
+  {
+    "id": "altera_enclave_unix",
+    "title": "Altera Enclave & UNIX Account Setup",
+    "order": 4,
+    "category": "requires_ticket",
+    "dependsOn": [],
+    "requiresApproval": true,
+    "important_prerequisite": {
+      "message": "This entire setup must be done on your Intel computer. Make sure you are signed into your Intel Microsoft account and connected to the Intel WiFi or VPN before starting.",
+      "blocking": true,
+      "confirmationRequired": "Confirm you are on your Intel computer, signed into your Intel Microsoft account, and connected to Intel WiFi or VPN before continuing.",
+      "no_intel_laptop_block": "If the user does not have their Intel laptop yet, this entire task is blocked. Tell them warmly: 'We will come back to this once you have your Intel laptop — it requires your Intel Microsoft account which is only set up on that machine. Everything else is done for now!'"
+    },
+    "strict_order": true,
+    "strict_order_note": "HARD GATES — each phase MUST be fully confirmed complete before the next begins. The user literally cannot perform later steps without earlier ones. Do not mention or allow any later phase until the prior confirmation is given. These are not suggestions — they are technical dependencies.",
+    "phases": [
+      {
+        "phase_id": "request_enclave_access",
+        "phase_number": 1,
+        "title": "Step 1: Request Altera Enclave Account",
+        "gate": "NONE — begin immediately after prerequisite is confirmed",
+        "agent_instruction": "Immediately provide the full instructions and link. Walk them through every substep. Then ask if they submitted the request and are waiting for the approval email.",
+        "instructions": "The first thing you need to do is request access to the Altera Enclave. Here is how:",
+        "substeps": [
+          "Open the AGS portal: https://ags.intel.com/identityiq/home.jsf",
+          "Click 'Request Access For Myself'",
+          "In the search bar, type 'enclave' and press Enter",
+          "Select the correct option for your role:",
+          "  → Permanent employee: select 'Altera Enclave for Altera Permanent Employees'",
+          "  → Contract worker or intern dedicated to Altera: select 'Altera Enclave for Altera Contract Workers'",
+          "When asked for a justification, enter: 'New intern/employee requesting access to enclave to create UNIX account.'",
+          "Click Submit",
+          "To track your request: click the three horizontal lines in the top left, then 'Access', then 'Track My Access Requests'"
+        ],
+        "links": [
+          { "label": "AGS Intel Portal", "url": "https://ags.intel.com/identityiq/home.jsf" },
+          { "label": "PSG Onboarding Wiki", "url": "https://wiki.ith.intel.com/spaces/psgonboarding/pages/746556614/Onboarding+Process+for+PSG+Hire" }
+        ],
+        "requires_approval_wait": true,
+        "approval_wait_message": "Your Enclave request has been submitted. This can take up to 24 hours. There is nothing more you can do here until the approval email arrives — come back the moment you receive it.",
+        "blocking_note": "The user CANNOT reset their password or create a UNIX account until they confirm receiving the Enclave approval email. Do NOT proceed to phase 2 under any circumstances until the user explicitly confirms.",
+        "completionConfirmation": "Have you submitted the Enclave request and are now waiting for the approval email? Let me know and I will make note while we wait."
+      },
+      {
+        "phase_id": "reset_altera_password",
+        "phase_number": 2,
+        "title": "Step 2: Reset Your Altera Password",
+        "gate": "HARD GATE — only begin after user explicitly confirms they received the Enclave approval email",
+        "agent_instruction": "Only begin this phase after the user has explicitly confirmed they received the Enclave account creation email. Do not hint at or mention this phase before that confirmation.",
+        "blocking_note": "Do NOT begin until the user explicitly confirms they received the Enclave approval email.",
+        "instructions": "Now that your Enclave account has been created, you need to reset your Altera password before creating your UNIX account. Here is how:",
+        "substeps": [
+          "Open the password reset page: https://passreset.altera.com/",
+          "Follow the on-screen prompts to reset your Altera password",
+          "Once reset, you MUST wait approximately 10 minutes for it to propagate — do not skip this wait or the next step will fail"
+        ],
+        "links": [
+          { "label": "Reset Altera Password", "url": "https://passreset.altera.com/" }
+        ],
+        "completionConfirmation": "Have you reset your Altera password and waited at least 10 minutes? Let me know when ready to continue."
+      },
+      {
+        "phase_id": "create_unix_account",
+        "phase_number": 3,
+        "title": "Step 3: Create Your UNIX Account and Apply for Access Groups",
+        "gate": "HARD GATE — only begin after user confirms password was reset and 10-minute wait is complete",
+        "agent_instruction": "Only begin after the user confirms the password reset and 10 minute wait. Immediately provide all instructions for both UNIX account creation AND psgeng/group applications in the same step. Warn clearly that psgeng approval takes 3-4 days and that ION/VNC/VSCode/Cursor CANNOT begin until psgeng is approved.",
+        "blocking_note": "Do NOT begin until phase 2 is complete and the user confirms they waited 10 minutes.",
+        "instructions": "Now create your UNIX account and immediately apply for your access groups right after. Do both before coming back.",
+        "part_a": {
+          "title": "Part A — Create Your UNIX Account",
+          "substeps": [
+            "Go to the AGS portal: https://ags.intel.com/identityiq/home.jsf",
+            "Click the three lines top left, then 'Access', then 'Track My Access Requests'",
+            "Find your Enclave request and click 'Details'",
+            "Look for the 'Account' field — your username is in parentheses, for example: (johndoe). Write this down.",
+            "Now open this link: https://autoops.intel.com/domains/Accounts/flows/create_unix_account",
+            "Enter your Account Username (without the parentheses)",
+            "Under 'Select Sites', choose 'altera_sc' — this automatically creates accounts for altera_png and altera_fm too",
+            "Submit the request"
+          ]
+        },
+        "part_b": {
+          "title": "Part B — Apply for Access Groups (do this immediately after Part A)",
+          "important_note": "Apply for psgeng ONLY as a baseline. Do NOT apply for psgarc under any circumstances. Ask your manager which additional groups you need.",
+          "substeps": [
+            "Go back to the AGS portal: https://ags.intel.com/identityiq/home.jsf",
+            "Click 'Request Access For Myself'",
+            "Use the direct psgeng link below to submit the psgeng request",
+            "Then ask your manager which additional groups you should apply for and submit those too",
+            "IMPORTANT: Only apply for psgeng as your baseline. Do NOT apply for psgarc."
+          ],
+          "common_dv_groups": {
+            "note": "If you are in design verification, common groups to ask your manager about include:",
+            "groups": ["soc", "psgfln", "psgi10", "psglsw", "psgknl", "psgsynopsys", "psgcadence", "psgship", "psggdr", "psgrambus", "psgsiemens", "psgflnsp", "psgcth2tfm"]
+          }
+        },
+        "psgeng_warning": {
+          "message": "psgeng approval can take 3 to 4 business days. You MUST wait for this approval before you can set up ION, VNC, VSCode, or Cursor. There is nothing to do for that section until the psgeng approval email arrives.",
+          "blocking": true
+        },
+        "links": [
+          { "label": "AGS Portal — Find Your Username & Request Groups", "url": "https://ags.intel.com/identityiq/home.jsf" },
+          { "label": "Create UNIX Account", "url": "https://autoops.intel.com/domains/Accounts/flows/create_unix_account" },
+          {
+            "label": "Apply for psgeng Access (direct link)",
+            "url": "https://ags.intel.com/identityiq/ui/index.jsf#/accessRequest/review?entitlementApplication1=AD-CORP&entitlementAttribute1=memberof&entitlementValue1=CN%3Dpsgeng,OU%3DIEM,OU%3DGroups,OU%3DEngineering%20Computing,OU%3DResources,DC%3Damr,DC%3Dcorp,DC%3Dintel,DC%3Dcom&quickLink=Request%20Access"
+          }
+        ],
+        "requires_approval_wait": true,
+        "approval_wait_message": "Your UNIX account request and group requests have been submitted. psgeng in particular takes 3-4 business days — the ION/VNC/VSCode/Cursor setup is blocked until that approval arrives.",
+        "next_phase_blocking_note": "The user CANNOT begin ION/VNC/VSCode/Cursor setup until they confirm receiving the psgeng approval email. Do not mention those tasks or hint at them before that.",
+        "completionConfirmation": "Have you submitted your UNIX account request and your group access requests? Let me know and I will note we are waiting on psgeng approval before we can continue with the dev environment setup."
+      }
+    ],
+    "agent_behavior": {
+      "on_reach": "First check if the user has their Intel laptop. If not, tell them this task is blocked until they get it and wrap up gracefully. If yes, confirm they are signed into Intel Microsoft account and on Intel WiFi or VPN. Then immediately begin phase 1 with full instructions.",
+      "on_issue": "If the user reports any problem at any phase, help them resolve it before moving on. Do not offer to skip.",
+      "on_approval_wait_only": "Only offer to move to another task when the user is explicitly waiting for an approval email with nothing left to do.",
+      "on_psgarc_mention": "Firmly remind the user: do NOT apply for psgarc. Only psgeng as the baseline.",
+      "on_psgeng_approval_received": "When the user confirms they received psgeng approval, immediately begin ion_vnc_vscode_cursor_setup phase 1.",
+      "on_completion": "Mark altera_enclave_unix as complete. Immediately begin ion_vnc_vscode_cursor_setup phase 1."
+    }
+  },
+  {
+    "id": "ion_vnc_vscode_cursor_setup",
+    "title": "ION, VNC, VSCode & Cursor Remote Setup",
+    "order": 5,
+    "category": "no_ticket",
+    "dependsOn": ["altera_enclave_unix"],
+    "dependsOn_note": "Do NOT begin any part of this task until the user confirms receiving the psgeng approval email. psgeng approval is required for the ION group selection step and cannot be skipped.",
+    "requiresApproval": false,
+    "strict_order": true,
+    "strict_order_note": "Each phase MUST be completed in order. Do not skip ahead. If the user is stuck help them resolve the issue before moving on.",
+    "phases": [
+      {
+        "phase_id": "download_ion_vnc",
+        "phase_number": 1,
+        "title": "Step 1: Download ION Sessions Manager and RealVNC Viewer",
+        "gate": "HARD GATE — only begin after user confirms psgeng approval email received",
+        "agent_instruction": "Immediately provide full instructions. Walk the user through it before asking if they are done.",
+        "instructions": "First, download two applications from Company Portal on your Intel laptop. Here is how:",
+        "substeps": [
+          "Press the Windows key and type 'Company Portal' in the search bar",
+          "Open Company Portal and make sure you are signed into your Intel account",
+          "Search for 'ION Sessions Manager' and install it",
+          "Then search for 'RealVNC Viewer' and install it",
+          "Wait for both to finish installing before continuing"
+        ],
+        "completionConfirmation": "Have both ION Sessions Manager and RealVNC Viewer finished installing? Let me know and I will walk you through setting up your session."
+      },
+      {
+        "phase_id": "configure_ion_session",
+        "phase_number": 2,
+        "title": "Step 2: Create Your ION VNC Session",
+        "gate": "HARD GATE — only begin after installs are confirmed complete",
+        "agent_instruction": "Only begin after installs are confirmed. Immediately provide full instructions.",
+        "blocking_note": "Do not begin until phase 1 is confirmed complete.",
+        "instructions": "Now create your remote session in ION Sessions Manager. Follow these steps:",
+        "substeps": [
+          "Open ION Sessions Manager from your Start menu",
+          "Click 'New' in the top left",
+          "Select 'New VNC' from the dropdown",
+          "For 'Site', select 'Santa Clara Altera'",
+          "For 'Group', select 'psgeng' — this is available now that your psgeng approval came through",
+          "For 'OS Name', make sure it is set to 'SLES 15' or higher — this should be the default",
+          "Click to launch the session",
+          "Open RealVNC Viewer and connect to the session",
+          "You also need to create a separate ION Tool Session. In that tool session terminal, run:",
+          "  echo $USER",
+          "  hostname -f",
+          "Write down the full hostname output (e.g. asccc06030103.sc.altera.com) — you will need this for SSH setup"
+        ],
+        "completionConfirmation": "Have you launched your VNC session and noted your hostname from the ION Tool session? Let me know and we will move on to VSCode setup."
+      },
+      {
+        "phase_id": "pre_setup_symlinks",
+        "phase_number": 3,
+        "title": "Step 3: Create Symlinks for VSCode and Cursor",
+        "gate": "HARD GATE — only begin after VNC session is confirmed working",
+        "agent_instruction": "Only begin after VNC session is confirmed. Immediately provide full instructions.",
+        "blocking_note": "Do not begin until phase 2 is confirmed complete.",
+        "instructions": "Your Linux home directory has limited space. Before installing VSCode or Cursor you need to create symlinks pointing their data to a larger workspace disk. Replace <your-workspace-directory> throughout with your actual path — ask your manager if unsure which disk to use.",
+        "substeps": [
+          "Open your Linux terminal in your ION Tool session",
+          "Recommended — run this automated script (replace the path with your actual workspace):",
+          "  /p/psg/ctools/vscode/setup-vscode-scripts/setup.sh <your-workspace-directory>",
+          "Or manually run these one at a time:",
+          "  mkdir <your-workspace-directory>/vscode-server",
+          "  mkdir <your-workspace-directory>/vscode",
+          "  mkdir -p <your-workspace-directory>/config/Code",
+          "  mkdir <your-workspace-directory>/copilot",
+          "  ln -s <your-workspace-directory>/vscode-server ~/.vscode-server",
+          "  ln -s <your-workspace-directory>/vscode ~/.vscode",
+          "  ln -s <your-workspace-directory>/config/Code ~/.config/Code",
+          "  ln -s <your-workspace-directory>/copilot ~/.copilot"
+        ],
+        "completionConfirmation": "Have you created the symlinks? Let me know and we will move on to installing VSCode."
+      },
+      {
+        "phase_id": "vscode_install_and_setup",
+        "phase_number": 4,
+        "title": "Step 4: Install and Set Up VSCode",
+        "gate": "HARD GATE — only begin after symlinks are confirmed created",
+        "agent_instruction": "Only begin after symlinks are confirmed. Walk through every substep in order. Always provide the full instructions before asking if the user has completed something.",
+        "blocking_note": "Do not begin until phase 3 is confirmed complete.",
+        "instructions": "Now install VSCode on your Windows Intel laptop and set it up to connect remotely to your Linux environment. Follow each step carefully:",
+        "substeps": [
+          "If you do not have VSCode, download and install it from https://code.visualstudio.com/",
+          "Open VSCode",
+          "Press Ctrl+Shift+X to open the Extensions panel",
+          "Search for 'Remote Development' and install the extension by Microsoft",
+          "Restart VSCode after it installs",
+          "Press Ctrl+Shift+X again and confirm 'Remote - SSH' is installed",
+          "Now create your RSA keypair for SSH — open PowerShell as Administrator:",
+          "  Press the Windows key, search PowerShell, right-click and choose 'Run as Administrator'",
+          "  Run: ssh-keygen -t rsa -b 4096",
+          "  When prompted for a directory press Enter to use the default",
+          "  Optionally set a passphrase — note that VSCode will ask for it every reconnect if you do",
+          "Now copy your public key to Linux:",
+          "  In PowerShell run: type $HOME\\.ssh\\id_rsa.pub",
+          "  Copy the entire string starting with ssh-rsa",
+          "  If you cannot copy from PowerShell, open C:\\Users\\<username>\\.ssh\\id_rsa.pub in Notepad instead",
+          "  In your Linux terminal (ION Tool session), run these if you do not have a ~/.ssh folder:",
+          "    mkdir ~/.ssh",
+          "    touch ~/.ssh/authorized_keys",
+          "    chmod 700 ~/.ssh",
+          "    chmod 600 ~/.ssh/authorized_keys",
+          "  Open ~/.ssh/authorized_keys in a text editor, paste your public key on a new line, and save",
+          "Now set up the SSH config file in VSCode:",
+          "  Click the Remote Explorer icon on the left sidebar (computer icon with small circle bottom right)",
+          "  Click the gear icon next to the SSH section",
+          "  Select the config file at: C:\\Users\\<your-username>\\.ssh\\config",
+          "  Add this block with your own details:",
+          "    Host LinuxSC",
+          "      User <your-username>",
+          "      HostName <the hostname from your ION Tool session>",
+          "      IdentityFile C:\\Users\\<your-username>\\.ssh\\id_rsa",
+          "  Do not use spaces in the Host nickname — use an underscore if needed",
+          "  Save the file with Ctrl+S",
+          "Now set the proxy in VSCode:",
+          "  Go to File → Preferences → Settings (or press Ctrl+,)",
+          "  In the search bar type: proxy",
+          "  Find 'Http: Proxy' and paste this value into the field: http://proxy-dmz.altera.com:912",
+          "  This is a URL value to paste into a settings field — do not open it in a browser",
+          "  Save your settings and restart VSCode",
+          "Connect to the remote server:",
+          "  Click the blue 'Open a Remote Window' button in the very bottom left corner of VSCode",
+          "  Select 'Connect to Host'",
+          "  Your host (e.g. LinuxSC) should appear — click it",
+          "  Select 'Linux' as the OS when prompted",
+          "  The first connection may take 5 to 10 minutes",
+          "  Once connected the bottom left corner will show your SSH host name"
+        ],
+        "links": [
+          { "label": "Download VSCode", "url": "https://code.visualstudio.com/" },
+          { "label": "VSCode and GitHub Copilot Setup Guide (requires Altera SSO)", "url": "https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/283457430/Start+Here+-+VSCode+and+Github+Copilot" },
+          { "label": "Windows Setup — VSCode and GitHub Copilot (requires Altera SSO)", "url": "https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/276825673/Windows+Setup+-+VSCode+and+Github+Copilot" }
+        ],
+        "completionConfirmation": "Are you successfully connected to the remote Linux server in VSCode? The bottom left corner should show your SSH host name. Let me know and we will move on to Cursor."
+      },
+      {
+        "phase_id": "cursor_setup",
+        "phase_number": 5,
+        "title": "Step 5: Install and Set Up Cursor",
+        "gate": "HARD GATE — only begin after VSCode SSH connection is confirmed working",
+        "agent_instruction": "Only begin after VSCode SSH connection is confirmed working. Walk through every substep. Always provide instructions before asking if complete.",
+        "blocking_note": "Do not begin until phase 4 is confirmed complete and the user is connected via VSCode SSH.",
+        "instructions": "Now set up Cursor, the AI-powered code editor you will be using. Follow these steps in order:",
+        "substeps": [
+          "In your Linux terminal (ION Tool session), create symlinks for Cursor:",
+          "  Recommended — run the automated script:",
+          "    /p/psg/ctools/vscode/setup-vscode-scripts/setup.sh <your-workspace-directory>",
+          "  Or manually:",
+          "    mkdir <your-workspace-directory>/cursor",
+          "    mkdir <your-workspace-directory>/cursor-server",
+          "    ln -s <your-workspace-directory>/cursor ~/.cursor",
+          "    ln -s <your-workspace-directory>/cursor-server ~/.cursor-server",
+          "Launch Cursor on Linux:",
+          "  Run: arc shell cursor",
+          "  Then run: cursor",
+          "  Click 'Login' — if Firefox does not open in VNC, right-click Login and copy the link",
+          "  Open the link in Chrome on your Windows machine (incognito if on Intel laptop)",
+          "  Sign in with your Altera SSO at: https://cursor.com/team/accept-invite?code=6afd7d45a68a6614e4953239dce8066aa51e0dbead92177a",
+          "  Before logging in, set these in your Linux terminal:",
+          "    setenv http_proxy http://proxy-dmz.altera.com:912",
+          "    setenv https_proxy http://proxy-dmz.altera.com:912",
+          "Configure Cursor settings:",
+          "  If you already set up VSCode, click 'Import Settings from VSCode' on the Cursor popup (Ctrl+Shift+J) — this brings in proxy and SSH settings automatically",
+          "  If your SSH Host nickname had a space, replace it with an underscore after importing",
+          "  If NOT importing from VSCode:",
+          "    Go to File → Preferences → Cursor Settings",
+          "    Find Network → HTTP Compatibility Mode → change to HTTP/1.1",
+          "    Press F1 → search 'Open VSCode Settings' → search 'proxy'",
+          "    For both User and Remote tabs add: http://proxy-dmz.altera.com:912 to the Http: Proxy field",
+          "    This is a value to paste into a settings field — do not open it in a browser",
+          "    If the Remote SSH tab is not present, click 'Remote - SSH' then 'Edit in settings.json'",
+          "    Find remote.SSH.httpProxy set to null and change null to: http://proxy-dmz.altera.com:912",
+          "    Save the file",
+          "  Install 'Remote - SSH (by Anysphere)': press Ctrl+Shift+X, search 'Remote - SSH by Anysphere', install it",
+          "  Close and reopen Cursor"
+        ],
+        "links": [
+          { "label": "Cursor IDE Setup — Full Confluence Guide (requires Altera SSO)", "url": "https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/880771080/Cursor+IDE#Update-Cursor-Settings" }
+        ],
+        "completionConfirmation": "Are you signed into Cursor and connected to your remote Linux environment? Let me know and I will mark this task complete."
+      }
+    ],
+    "troubleshooting": {
+      "cursor_server_tar_error": {
+        "trigger_phrases": [
+          "Connection to Cursor server failed",
+          "Couldn't install Cursor Server",
+          "install script returned non-zero exit status",
+          "Tar failed to extract server contents",
+          "cursor-server"
+        ],
+        "instructions": "This is a known issue. Work through these steps one at a time:",
+        "steps": [
+          "Check symlinks: run ls -la ~/.cursor-server in Linux — should show a symlink not a real folder. If real folder: rm -rf ~/.cursor-server && ln -s <your-workspace-directory>/cursor-server ~/.cursor-server",
+          "Check disk space: df -h <your-workspace-directory>",
+          "Confirm remote.SSH.httpProxy in settings.json is http://proxy-dmz.altera.com:912 not null",
+          "Confirm HTTP/1.1 compatibility mode is on: Cursor Settings → Network → HTTP Compatibility Mode",
+          "Delete partial files and retry: rm -rf <your-workspace-directory>/cursor-server/* then reconnect",
+          "Confirm ION Tool session OS is SLES 15 or higher",
+          "If still failing contact psgcfdacore@intel.com or see the Confluence guide below"
+        ],
+        "links": [
+          { "label": "Cursor IDE Setup — Full Confluence Guide", "url": "https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/880771080/Cursor+IDE" }
+        ]
+      }
+    },
+    "agent_behavior": {
+      "on_reach": "Only begin after the user confirms psgeng approval email received. Start phase 1 immediately with full instructions.",
+      "on_issue": "Help the user resolve any problem before moving on. Do not offer to skip ahead.",
+      "on_approval_wait_only": "Only offer to move to another task if the user is waiting for an approval email with nothing left to do.",
+      "on_troubleshooting_trigger": "If the user mentions any Cursor server error or tar extraction failure, immediately pause and work through troubleshooting before resuming.",
+      "on_completion": "Mark ion_vnc_vscode_cursor_setup as complete and continue."
+    }
+  },
+  {
+    "id": "brex_setup",
+    "title": "Brex Account Setup",
+    "order": 6,
+    "category": "no_ticket",
+    "dependsOn": [],
+    "requiresApproval": false,
+    "triggered_by": "email_invite",
+    "triggered_by_note": "Do not bring this up proactively. Trigger immediately when the user mentions receiving a Brex invitation email, then return to the current task after completion.",
+    "phases": [
+      {
+        "phase_id": "complete_brex_setup",
+        "phase_number": 1,
+        "title": "Set Up Your Brex Account",
+        "instructions": "You received a Brex invitation email. Here is how to complete the setup:",
+        "substeps": [
+          "Find the Brex invitation email in your inbox",
+          "Click the link inside the email to begin setup",
+          "Follow the prompts to create your Brex account"
+        ],
+        "completionConfirmation": "Have you completed your Brex account setup? Confirm to mark this task done."
+      }
+    ],
+    "agent_behavior": {
+      "on_first_day_start": "Remind the user to watch for a Brex invitation email at some point during their first day.",
+      "on_user_mentions_brex_email": "Immediately pivot to this task, complete it, then return to the previously active task.",
+      "on_completion": "Mark brex_setup as complete and return to the previously active onboarding task."
+    }
+  }
+]
