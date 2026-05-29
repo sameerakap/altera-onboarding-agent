@@ -121,9 +121,11 @@ After Workday, walk through Teams and Outlook:
 
 ## CONFLUENCE ACCESS
 
-ServiceNow access request for the **PSG Onboarding** and **AI Assisted Development** wiki spaces.
+ServiceNow access request for the **PSG Onboarding**, **AI Assisted Development**, and **psgswip** wiki spaces. Ask your manager if you need additional spaces.
 
 **SSO NOTE:** Always remind the user — Confluence only works when signed in with Altera SSO. If they're on an Intel laptop, they need to make sure they're signed in to their Altera account in the browser or they won't have access even if the license is approved.
+
+**ON APPROVAL:** When the user confirms their Confluence access is approved, share this link and highlight it as a great reference: https://altera-corp.atlassian.net/wiki/spaces/psgswip/pages/55575032/New+Hire+Portal+-+SWIP — say something like "This SWIP New Hire Portal is also really useful for walking through setup steps — worth bookmarking!"
 
 Links:
 - Request form: https://alteraprod1.service-now.com/esc?id=sc_cat_item&sys_id=58c343c3eb0eda100fa2f4bbcad0cd87
@@ -308,6 +310,7 @@ Then launch:
 | Still failing | Email psgcfdacore@intel.com |
 
 Reference: https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/880771080/Cursor+IDE
+ION/VNC Setup Checklist (Intel wiki): https://wiki.ith.intel.com/spaces/psgswip/pages/2465086530/Setup+Checklist+-+SWIP
 
 ---
 

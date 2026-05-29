@@ -144,7 +144,7 @@
         "substeps": [
           "Click the ServiceNow request link below",
           "Sign in with your Altera credentials if prompted",
-          "Request access to these spaces: 'PSG Onboarding' and 'AI Assisted Development'",
+          "Request access to these spaces: 'PSG Onboarding', 'AI Assisted Development', and 'psgswip'",
           "Ask your manager if there are any additional wiki spaces you should request and include those in the same request",
           "Submit the request"
         ],
@@ -168,7 +168,12 @@
         "phase_number": 2,
         "title": "Verify Your Confluence Access",
         "instructions": "Now that you have been approved, confirm you can access the wiki pages by opening each link below. Remember to be signed into your Altera SSO first.",
+        "on_approval_message": "Great news! Now that your Confluence access is approved, here is a really useful page to bookmark — the SWIP New Hire Portal walks you through a lot of the same setup steps and is a great companion reference.",
         "links": [
+          {
+            "label": "New Hire Portal — SWIP (great reference for setup steps)",
+            "url": "https://altera-corp.atlassian.net/wiki/spaces/psgswip/pages/55575032/New+Hire+Portal+-+SWIP"
+          },
           {
             "label": "Cursor IDE — AI Assisted Development Space",
             "url": "https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/880771080/Cursor+IDE"
@@ -524,6 +529,9 @@
           "Search for 'ION Sessions Manager' and install it",
           "Then search for 'RealVNC Viewer' and install it",
           "Wait for both to finish installing before continuing"
+        ],
+        "links": [
+          { "label": "ION/VNC Setup Checklist (Intel wiki)", "url": "https://wiki.ith.intel.com/spaces/psgswip/pages/2465086530/Setup+Checklist+-+SWIP" }
         ],
         "completionConfirmation": "Have both ION Sessions Manager and RealVNC Viewer finished installing? Let me know and I will walk you through setting up your session."
       },
