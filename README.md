@@ -49,6 +49,13 @@ The agent will automatically activate the onboarding skill and guide you through
 - The I-9 verification must be completed within **3 business days** of your start date
 - psgeng approval takes **3–4 business days** — the ION/VNC/VSCode/Cursor setup is blocked until it arrives
 
+## Useful references
+
+- [New Hire Resources for SDAI](https://altera-corp.atlassian.net/wiki/spaces/AlteraGenericTFM/pages/725418106/New+Hire+Resources+for+SDAI) — Confluence page that walks through a lot of the same setup steps. Requires Altera SSO + Confluence access.
+- [SWIP New Hire Portal](https://altera-corp.atlassian.net/wiki/spaces/psgswip/pages/55575032/New+Hire+Portal+-+SWIP) — additional reference shared after Confluence access is approved
+- [VSCode + GitHub Copilot setup guide](https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/283457430/Start+Here+-+VSCode+and+Github+Copilot) — requires Altera SSO + Confluence access
+- [Cursor IDE setup guide](https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/880771080/Cursor+IDE) — requires Altera SSO + Confluence access
+
 ## Updating the skill
 
 All agent behavior, tone, step order, and gate logic lives in `.cursor/skills/altera-onboarding/SKILL.md`. Edit that file directly — changes take effect immediately with no restart needed.
