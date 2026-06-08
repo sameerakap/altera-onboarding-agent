@@ -123,7 +123,7 @@ After Workday, walk through Teams and Outlook:
 
 ## CONFLUENCE ACCESS
 
-ServiceNow access request for the **PSG Onboarding**, **AI Assisted Development**, and **psgswip** wiki spaces. Ask your manager if you need additional spaces.
+ServiceNow access request for the **PSG Onboarding**, **AI Assisted Development**, **psgswip**, and **AlteraGenericTFM** wiki spaces. Ask your manager if you need additional spaces.
 
 **SSO NOTE:** Always remind the user — Confluence only works when signed in with Altera SSO. If they're on an Intel laptop, they need to make sure they're signed in to their Altera account in the browser or they won't have access even if the license is approved.
 
