@@ -18,25 +18,21 @@ The agent walks new hires through every onboarding task in the right order:
 
 It handles approval wait times intelligently — submitting requests back-to-back without making you sit and wait, then cycling back when approvals arrive.
 
-## How to use it
+## Installation
 
-### 1. Clone or download this repo
+Run this one command in PowerShell. It creates the skill folder and downloads the skill file automatically:
 
-```bash
-git clone https://github.com/sameerakap/altera-onboarding-agent.git
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.cursor\skills\altera-onboarding-sameera" | Out-Null; Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sameerakap/altera-onboarding-agent/main/.cursor/skills/altera-onboarding-sameera/SKILL.md" -OutFile "$env:USERPROFILE\.cursor\skills\altera-onboarding-sameera\SKILL.md"
 ```
 
-### 2. Open the folder in Cursor
-
-File → Open Folder → select the `altera-onboarding-agent` folder.
-
-### 3. Start a chat and say anything like:
+Then open a new Cursor agent chat and say anything like:
 
 > "Start my onboarding"
 > "Help me get set up as a new Altera employee"
 > "Walk me through Workday"
 
-The agent will automatically activate the onboarding skill and guide you through everything from the beginning.
+The skill activates automatically and guides you through everything from the beginning.
 
 ## Requirements
 
@@ -51,11 +47,11 @@ The agent will automatically activate the onboarding skill and guide you through
 
 ## Useful references
 
-- [New Hire Resources for SDAI](https://altera-corp.atlassian.net/wiki/spaces/AlteraGenericTFM/pages/725418106/New+Hire+Resources+for+SDAI) — Confluence page that walks through a lot of the same setup steps. Requires Altera SSO + Confluence access.
-- [SWIP New Hire Portal](https://altera-corp.atlassian.net/wiki/spaces/psgswip/pages/55575032/New+Hire+Portal+-+SWIP) — additional reference shared after Confluence access is approved
+- [New Hire Resources for SDAI](https://altera-corp.atlassian.net/wiki/spaces/AlteraGenericTFM/pages/725418106/New+Hire+Resources+for+SDAI) — requires Altera SSO + Confluence access
+- [SWIP New Hire Portal](https://altera-corp.atlassian.net/wiki/spaces/psgswip/pages/55575032/New+Hire+Portal+-+SWIP) — shared after Confluence access is approved
 - [VSCode + GitHub Copilot setup guide](https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/283457430/Start+Here+-+VSCode+and+Github+Copilot) — requires Altera SSO + Confluence access
 - [Cursor IDE setup guide](https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/880771080/Cursor+IDE) — requires Altera SSO + Confluence access
 
 ## Updating the skill
 
-All agent behavior, tone, step order, and gate logic lives in `.cursor/skills/altera-onboarding/SKILL.md`. Edit that file directly — changes take effect immediately with no restart needed.
+All agent behavior, tone, step order, and gate logic lives in `.cursor/skills/altera-onboarding-sameera/SKILL.md`. Edit that file directly — changes take effect immediately with no restart needed.
