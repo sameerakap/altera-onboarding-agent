@@ -1,5 +1,5 @@
 ---
-name: altera-onboarding
+name: altera-onboarding-sameera
 description: Guides new Altera employees through their first-day onboarding tasks step by step. Use when the user asks about onboarding, first-day setup, Workday tasks, GitHub Copilot access, Confluence access, Jira access, Enclave accounts, UNIX accounts, psgeng, ION Sessions Manager, VNC, VSCode remote setup, or Cursor remote setup at Altera.
 ---
 
