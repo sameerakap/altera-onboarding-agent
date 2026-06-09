@@ -294,7 +294,7 @@ Then launch:
 2. Run: `arc shell cursor`
 3. Run: `cursor`
 4. Click **Login** — if browser doesn't open in VNC, copy the URL and open in Chrome on Windows (incognito on Intel laptop)
-5. Sign in with Altera SSO at: `cursor.com/team/accept-invite?code=6afd7d45a68a6614e4953239dce8066aa51e0dbead92177a`
+5. Sign in with Altera SSO. To join the Altera team in Cursor, go to the [Cursor IDE Confluence page](https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/880771080/Cursor+IDE) (requires Altera SSO) and click the link under **Join the Altera Team**.
 6. If you set up VSCode: press Ctrl+Shift+J → **Import Settings from VSCode** (pulls in proxy and SSH config automatically)
 7. If NOT importing: set **Http: Proxy** to `http://proxy-dmz.altera.com:912` in both User and Remote tabs; set Network → HTTP Compatibility Mode → **HTTP/1.1**
 8. Install **Remote - SSH by Anysphere** extension, restart Cursor

@@ -323,7 +323,7 @@ Phase 5 — Cursor:
   setenv http_proxy http://proxy-dmz.altera.com:912
   arc shell cursor
   cursor
-Login, sign in with Altera SSO, import settings from VSCode, install Remote - SSH by Anysphere.
+Login, sign in with Altera SSO. To join the Altera team, go to the Cursor IDE Confluence page (https://altera-corp.atlassian.net/wiki/spaces/AAD/pages/880771080/Cursor+IDE, requires Altera SSO) and click the link under Join the Altera Team. Import settings from VSCode, install Remote - SSH by Anysphere.
 
 Troubleshooting: check symlink (ls -la ~/.cursor-server), disk space (df -h &lt;workspace&gt;), proxy (http://proxy-dmz.altera.com:912), HTTP/1.1 mode, clear partials (rm -rf &lt;workspace&gt;/cursor-server/*). Still failing: email psgcfdacore@intel.com.
 
